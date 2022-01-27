@@ -19,13 +19,14 @@ from cuml import HDBSCAN
 """
 
 
-emb_files = glob( '/rapids/notebooks/host/faceid/embeddings/**/*.np', recursive=True)
+
+emb_files = glob( '/rapids/notebooks/host/faceid/embeddings/**/*.npy', recursive=True)
 embeddings = np.array([ np.fromfile(x, dtype=np.float32) for x in tqdm(emb_files) ])
 
 
-# embeddings = [ np.load(x, dtype=np.float32) for x in tqdm(embeddings) ]
 model = HDBSCAN(min_samples=25, min_cluster_size=25, cluster_selection_epsilon=15.)
-labels = model.fit_predict(embeddings) 
+labels = model.fit_predict(embeddings[:50000]) 
+
 
 
 transform_fname = lambda x : x.replace('embeddings', 'face_thumbnails').replace('.np','.jpg')
